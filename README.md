@@ -3,6 +3,7 @@ Atividades da faculdade
 
 
 
+
 O curso de Engenharia de Software forma profissionais capazes de planejar, desenvolver, testar e manter sistemas e aplicativos. Durante a graduação, o aluno aprende programação, arquitetura de sistemas, banco de dados, inteligência artificial, segurança da informação e gestão de projetos de software.
 
 Além da parte técnica, o curso também ensina metodologias de desenvolvimento, trabalho em equipe e organização de projetos, preparando o estudante para criar soluções tecnológicas usadas em empresas, aplicativos, jogos e sistemas digitais.
