@@ -55,7 +55,7 @@ Explique como o grupo lidou com as limitações e quais soluções criativas for
 ---
 
 ## 👥 Colaboração
-
+Richard de Souza Dias
 Matheo Augustus Rocha Bagatini 
 João Miguel Monteiro Lima
 ---
