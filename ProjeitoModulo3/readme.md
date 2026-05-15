@@ -58,6 +58,7 @@ Explique como o grupo lidou com as limitações e quais soluções criativas for
 Richard de Souza Dias
 Matheo Augustus Rocha Bagatini 
 João Miguel Monteiro Lima
+João Pedro Mota Borges Baía
 ---
 
 ## 📝 Registro da Aula
