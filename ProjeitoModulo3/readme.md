@@ -57,7 +57,7 @@ Explique como o grupo lidou com as limitações e quais soluções criativas for
 ## 👥 Colaboração
 
 Matheo Augustus Rocha Bagatini 
-
+João Miguel Monteiro Lima
 ---
 
 ## 📝 Registro da Aula
