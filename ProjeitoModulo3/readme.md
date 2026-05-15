@@ -56,7 +56,7 @@ Explique como o grupo lidou com as limitações e quais soluções criativas for
 
 ## 👥 Colaboração
 
-Descreva como o grupo organizou as tarefas e responsabilidades entre os integrantes.
+Matheo Augustus Rocha Bagatini 
 
 ---
 
