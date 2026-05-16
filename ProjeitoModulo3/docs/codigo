@@ -1,102 +1,643 @@
-# Projeto Módulo 3 – Low Code/No Code/Vibecode
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jarvis</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0f766e;--teal-lt:#ccfbf1;--teal-dk:#0d5f58;--teal-md:#14b8a6;--slate:#64748b;--slate-lt:#f1f5f9;--slate-dk:#1e293b;--white:#ffffff;--border:#e2e8f0;--danger:#ef4444;--warn:#f59e0b;--success:#10b981;--radius:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--slate-lt);color:var(--slate-dk);min-height:100vh}
+.topbar{height:56px;background:var(--teal);display:flex;align-items:center;padding:0 1.25rem;gap:12px;position:sticky;top:0;z-index:200}
+.topbar-logo{font-size:20px}
+.topbar-name{font-weight:600;font-size:15px;color:#fff}
+.topbar-spacer{flex:1}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff}
+.topbar-username{font-size:13px;color:rgba(255,255,255,.85)}
+.topbar-logout{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 12px;border-radius:99px;font-size:12px;cursor:pointer;font-family:inherit}
+.topbar-logout:hover{background:rgba(255,255,255,.25)}
+.app{display:flex;min-height:calc(100vh - 56px)}
+.sidebar{width:240px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:1rem .75rem;gap:2px;flex-shrink:0}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);padding:8px 10px 4px;margin-top:8px}
+.nav-btn{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:13px;color:var(--slate-dk);text-align:left;width:100%;transition:background .12s}
+.nav-btn:hover{background:var(--slate-lt)}
+.nav-btn.active{background:var(--teal-lt);color:var(--teal-dk);font-weight:500}
+.nav-btn .ni{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--danger);color:#fff;padding:1px 6px;border-radius:99px;min-width:18px;text-align:center;display:none}
+.main{flex:1;padding:1.5rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.25rem;min-height:calc(100vh - 56px)}
+.page{display:none;flex-direction:column;gap:1.25rem}
+.page.active{display:flex}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.page-title{font-size:20px;font-weight:600}
+.page-sub{font-size:13px;color:var(--slate);margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;border:none;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--teal);color:#fff}.btn-primary:hover{background:var(--teal-dk)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--slate-dk)}.btn-outline:hover{background:var(--slate-lt)}
+.btn-sm{padding:5px 11px;font-size:12px;border-radius:7px}
+.btn-icon{width:32px;height:32px;padding:0;justify-content:center;border-radius:7px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px}
+.kpi{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem}
+.kpi-icon{font-size:20px;margin-bottom:6px}
+.kpi-label{font-size:11px;font-weight:500;color:var(--slate);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.kpi-value{font-size:24px;font-weight:600;line-height:1}
+.kpi-sub{font-size:12px;color:var(--slate);margin-top:4px}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--white)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--slate-lt);padding:10px 14px;text-align:left;font-weight:500;font-size:11px;color:var(--slate);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+td{padding:11px 14px;border-top:1px solid var(--border);color:var(--slate-dk);vertical-align:middle}
+tr:hover td{background:#fafbfc}
+.no-data{text-align:center;padding:2.5rem;color:var(--slate);font-size:14px}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:500}
+.b-ok{background:#dcfce7;color:#166534}.b-low{background:#fef9c3;color:#854d0e}.b-out{background:#fee2e2;color:#991b1b}
+.b-ativo{background:var(--teal-lt);color:var(--teal-dk)}.b-ferias{background:#ede9fe;color:#5b21b6}.b-inativo{background:var(--slate-lt);color:var(--slate)}
+.b-pago{background:#dcfce7;color:#166534}.b-pendente{background:#fef9c3;color:#854d0e}.b-vencido{background:#fee2e2;color:#991b1b}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;z-index:500;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(3px)}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:16px;padding:1.75rem;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;transform:translateY(16px);transition:transform .2s;box-shadow:0 24px 60px rgba(0,0,0,.18)}
+.overlay.open .modal{transform:translateY(0)}
+.modal-title{font-size:17px;font-weight:600;margin-bottom:1.25rem}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1rem}
+.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{font-size:12px;font-weight:500;color:var(--slate)}
+input,select,textarea{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;color:var(--slate-dk);outline:none;transition:border-color .15s;background:var(--white);width:100%}
+input:focus,select:focus{border-color:var(--teal)}
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,var(--teal-dk) 0%,var(--teal) 60%,var(--teal-md) 100%);display:flex;align-items:center;justify-content:center;z-index:1000}
+.login-box{background:var(--white);border-radius:20px;padding:2.5rem;width:380px;box-shadow:0 32px 80px rgba(0,0,0,.25)}
+.login-logo{font-size:36px;text-align:center;margin-bottom:.5rem}
+.login-title{font-size:22px;font-weight:600;text-align:center;color:var(--slate-dk);margin-bottom:.25rem}
+.login-sub{font-size:13px;text-align:center;color:var(--slate);margin-bottom:1.75rem}
+.login-tabs{display:flex;background:var(--slate-lt);border-radius:9px;padding:3px;margin-bottom:1.25rem}
+.login-tab{flex:1;padding:7px;border:none;border-radius:7px;background:transparent;font-family:inherit;font-size:13px;cursor:pointer;color:var(--slate);transition:all .15s}
+.login-tab.active{background:var(--white);color:var(--slate-dk);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.login-err{font-size:12px;color:var(--danger);margin-top:6px;text-align:center;min-height:18px}
+.login-btn{width:100%;padding:11px;background:var(--teal);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;margin-top:4px}
+.login-btn:hover{background:var(--teal-dk)}
+.alert-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:9px;font-size:13px;margin-bottom:6px}
+.alert-item.warn{background:#fffbeb;border:1px solid #fcd34d;color:#92400e}
+.alert-item.danger{background:#fef2f2;border:1px solid #fca5a5;color:#991b1b}
+.ponto-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search-box{position:relative;flex:1;min-width:160px}
+.search-box input{padding-left:32px}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--slate);pointer-events:none}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+</style>
+</head>
+<body>
 
-## 📌 Desafio Escolhido
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">🤖</div>
+    <div class="login-title">Jarvis</div>
+    <div class="login-sub">Sistema completo para sua loja</div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchTab('entrar',this)">Entrar</button>
+      <button class="login-tab" onclick="switchTab('cadastrar',this)">Criar conta</button>
+    </div>
+    <div id="tab-entrar">
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="seu@email.com"></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"></div>
+      <div class="login-err" id="login-err"></div>
+      <button class="login-btn" onclick="fazerLogin()">Entrar</button>
+    </div>
+    <div id="tab-cadastrar" style="display:none">
+      <div class="form-group"><label>Nome da loja</label><input type="text" id="reg-loja" placeholder="Ex: Boutique da Maria"></div>
+      <div class="form-group"><label>Seu nome</label><input type="text" id="reg-nome" placeholder="Nome completo"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="seu@email.com"></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="reg-senha" placeholder="Mínimo 6 caracteres" onkeydown="if(event.key==='Enter')fazerCadastro()"></div>
+      <div class="login-err" id="reg-err"></div>
+      <button class="login-btn" onclick="fazerCadastro()">Criar conta grátis</button>
+    </div>
+  </div>
+</div>
 
-O grupo desenvolveu um **sistema de gestão completo para lojistas**, resolvendo um problema real enfrentado por donos de pequenas lojas: a fragmentação do gerenciamento em planilhas separadas e ferramentas desconectadas.
+<!-- APP -->
+<div id="app" style="display:none">
+  <header class="topbar">
+    <span class="topbar-logo">🤖</span>
+    <span class="topbar-name">Jarvis</span><span style="color:rgba(255,255,255,.6);font-size:13px;font-weight:400" id="topbar-loja"></span>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-avatar" id="topbar-avatar"></div>
+    <span class="topbar-username" id="topbar-nome"></span>
+    <button class="topbar-logout" onclick="logout()">Sair</button>
+  </header>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="nav-label">Menu</div>
+      <button class="nav-btn active" onclick="navTo('dashboard',this)"><span class="ni">📊</span>Dashboard</button>
+      <button class="nav-btn" onclick="navTo('estoque',this)"><span class="ni">📦</span>Estoque<span class="nav-badge" id="badge-est">0</span></button>
+      <button class="nav-btn" onclick="navTo('funcionarios',this)"><span class="ni">👥</span>Funcionários</button>
+      <button class="nav-btn" onclick="navTo('ponto',this)"><span class="ni">🕐</span>Ponto</button>
+      <button class="nav-btn" onclick="navTo('financeiro',this)"><span class="ni">💰</span>Financeiro<span class="nav-badge" id="badge-fin">0</span></button>
+      <button class="nav-btn" onclick="navTo('precos',this)"><span class="ni">🏷️</span>Tabela de Preços</button>
+    </aside>
+    <main class="main">
 
-O protótipo centraliza em uma única aplicação:
-- Cadastro e controle de estoque com alertas automáticos de reposição
-- Gerenciamento de funcionários com horários de entrada, saída e almoço
-- Ponto eletrônico diário com cálculo automático de horas trabalhadas
-- Contas a pagar e a receber com alertas de vencimento
-- Tabela de preços com cálculo automático de margem de lucro
-- Dashboard unificado com KPIs e alertas críticos em tempo real
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div><div class="page-title">Dashboard</div><div class="page-sub" id="dash-data"></div></div>
+        </div>
+        <div class="kpi-grid" id="dash-kpis"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+          <div class="card"><div style="font-weight:500;margin-bottom:10px">⚠️ Alertas</div><div id="dash-alertas"></div></div>
+          <div class="card"><div style="font-weight:500;margin-bottom:10px">📦 Estoque crítico</div><div id="dash-critico"></div></div>
+        </div>
+      </div>
 
----
+      <!-- ESTOQUE -->
+      <div class="page" id="page-estoque">
+        <div class="page-header">
+          <div><div class="page-title">Estoque</div><div class="page-sub">Gerencie seus produtos</div></div>
+          <button class="btn btn-primary" onclick="abrirProduto()">＋ Novo produto</button>
+        </div>
+        <div class="toolbar">
+          <div class="search-box"><span class="search-icon">🔍</span><input type="text" placeholder="Buscar produto…" oninput="renderEstoque(this.value)"></div>
+          <select id="filtro-est" onchange="renderEstoque()" style="width:auto;padding:8px 12px">
+            <option value="">Todos</option><option value="ok">OK</option><option value="low">Baixo</option><option value="out">Zerado</option>
+          </select>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Produto</th><th>Categoria</th><th>Qtd</th><th>Mín</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead><tbody id="tb-est"></tbody></table></div>
+      </div>
 
-## 🖥️ Protótipo
+      <!-- FUNCIONÁRIOS -->
+      <div class="page" id="page-funcionarios">
+        <div class="page-header">
+          <div><div class="page-title">Funcionários</div><div class="page-sub">Cadastro da equipe</div></div>
+          <button class="btn btn-primary" onclick="abrirFunc()">＋ Novo funcionário</button>
+        </div>
+        <div class="toolbar"><div class="search-box"><span class="search-icon">🔍</span><input type="text" placeholder="Buscar…" oninput="renderFuncionarios(this.value)"></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Cargo</th><th>Entrada</th><th>Almoço</th><th>Saída</th><th>Salário</th><th>Status</th><th>Ações</th></tr></thead><tbody id="tb-func"></tbody></table></div>
+      </div>
 
-* Prints das telas na pasta `/docs`
-* O protótipo funciona como um arquivo HTML único que roda diretamente no navegador, sem instalação ou internet
+      <!-- PONTO -->
+      <div class="page" id="page-ponto">
+        <div class="page-header"><div><div class="page-title">Ponto Eletrônico</div><div class="page-sub" id="ponto-label"></div></div></div>
+        <div id="lista-ponto"></div>
+      </div>
 
-**Como usar:**
-1. Abrir o arquivo `gestaoloja.html` no navegador
-2. Clicar em **"Criar conta"** e preencher nome da loja, nome, email e senha
-3. Fazer login e começar a usar o sistema completo
+      <!-- FINANCEIRO -->
+      <div class="page" id="page-financeiro">
+        <div class="page-header">
+          <div><div class="page-title">Financeiro</div><div class="page-sub">Contas e lembretes</div></div>
+          <button class="btn btn-primary" onclick="abrirConta()">＋ Nova conta</button>
+        </div>
+        <div class="kpi-grid" id="fin-kpis"></div>
+        <div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Vencimento</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead><tbody id="tb-fin"></tbody></table></div>
+      </div>
 
-Todos os dados são salvos automaticamente no próprio navegador (`localStorage`), sem necessidade de servidor ou banco de dados externo.
+      <!-- PREÇOS -->
+      <div class="page" id="page-precos">
+        <div class="page-header"><div><div class="page-title">Tabela de Preços</div><div class="page-sub">Preços e margens por produto</div></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Produto</th><th>Categoria</th><th>Preço venda</th><th>Custo</th><th>Margem</th><th>Atualizado</th></tr></thead><tbody id="tb-preco"></tbody></table></div>
+      </div>
 
----
+    </main>
+  </div>
+</div>
 
-## ⚙️ Plataforma Utilizada
+<!-- MODAL PRODUTO -->
+<div class="overlay" id="m-produto"><div class="modal">
+  <div class="modal-title" id="t-produto">Novo Produto</div>
+  <input type="hidden" id="p-id">
+  <div class="form-row">
+    <div class="form-group"><label>Nome *</label><input type="text" id="p-nome" placeholder="Ex: Camiseta P"></div>
+    <div class="form-group"><label>Categoria *</label><input type="text" id="p-cat" placeholder="Ex: Vestuário"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Quantidade *</label><input type="number" id="p-qtd" placeholder="0" min="0"></div>
+    <div class="form-group"><label>Estoque mínimo *</label><input type="number" id="p-min" placeholder="5" min="0"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Preço de venda (R$) *</label><input type="number" id="p-preco" placeholder="0.00" step="0.01"></div>
+    <div class="form-group"><label>Custo (R$)</label><input type="number" id="p-custo" placeholder="0.00" step="0.01"></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn btn-outline" onclick="fechar('m-produto')">Cancelar</button>
+    <button class="btn btn-primary" onclick="salvarProduto()">Salvar</button>
+  </div>
+</div></div>
 
-* **Nome da plataforma:** HTML + CSS + JavaScript puro (abordagem Vibecode)
+<!-- MODAL FUNCIONÁRIO -->
+<div class="overlay" id="m-func"><div class="modal">
+  <div class="modal-title" id="t-func">Novo Funcionário</div>
+  <input type="hidden" id="f-id">
+  <div class="form-row">
+    <div class="form-group"><label>Nome completo *</label><input type="text" id="f-nome" placeholder="Nome"></div>
+    <div class="form-group"><label>Cargo *</label><input type="text" id="f-cargo" placeholder="Ex: Atendente"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Entrada</label><input type="time" id="f-entrada" value="08:00"></div>
+    <div class="form-group"><label>Saída</label><input type="time" id="f-saida" value="17:00"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Almoço início</label><input type="time" id="f-ai" value="12:00"></div>
+    <div class="form-group"><label>Almoço fim</label><input type="time" id="f-af" value="13:00"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Salário (R$)</label><input type="number" id="f-sal" placeholder="0.00" step="0.01"></div>
+    <div class="form-group"><label>Status</label>
+      <select id="f-status"><option value="ativo">Ativo</option><option value="ferias">Férias</option><option value="inativo">Inativo</option></select>
+    </div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn btn-outline" onclick="fechar('m-func')">Cancelar</button>
+    <button class="btn btn-primary" onclick="salvarFunc()">Salvar</button>
+  </div>
+</div></div>
 
-* **Justificativa da escolha:** A abordagem vibecode foi selecionada por permitir construir um protótipo funcional completo em uma única sessão, sem dependência de plataformas externas como Bubble ou Make. Como o desafio envolvia múltiplos módulos integrados (estoque, RH, financeiro), plataformas no-code teriam dificuldade em conectar todos esses fluxos sem planos pagos. O HTML puro garantiu liberdade total de personalização, funcionamento offline e zero custo — características ideais para validar o conceito com usuários reais antes de investir em infraestrutura.
+<!-- MODAL CONTA -->
+<div class="overlay" id="m-conta"><div class="modal">
+  <div class="modal-title" id="t-conta">Nova Conta</div>
+  <input type="hidden" id="c-id">
+  <div class="form-group"><label>Descrição *</label><input type="text" id="c-desc" placeholder="Ex: Aluguel"></div>
+  <div class="form-row">
+    <div class="form-group"><label>Valor (R$) *</label><input type="number" id="c-val" placeholder="0.00" step="0.01"></div>
+    <div class="form-group"><label>Vencimento *</label><input type="date" id="c-venc"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Categoria</label><input type="text" id="c-cat" placeholder="Ex: Infraestrutura"></div>
+    <div class="form-group"><label>Tipo</label>
+      <select id="c-tipo"><option value="despesa">Despesa</option><option value="receita">Receita</option></select>
+    </div>
+  </div>
+  <div class="form-group"><label>Status</label>
+    <select id="c-status"><option value="pendente">Pendente</option><option value="pago">Pago</option></select>
+  </div>
+  <div class="modal-actions">
+    <button class="btn btn-outline" onclick="fechar('m-conta')">Cancelar</button>
+    <button class="btn btn-primary" onclick="salvarConta()">Salvar</button>
+  </div>
+</div></div>
 
----
+<!-- MODAL PONTO -->
+<div class="overlay" id="m-ponto"><div class="modal">
+  <div class="modal-title" id="t-ponto">Registrar Ponto</div>
+  <input type="hidden" id="pt-fid">
+  <div class="form-group"><label>Data</label><input type="date" id="pt-data"></div>
+  <div class="form-row">
+    <div class="form-group"><label>Entrada</label><input type="time" id="pt-ent"></div>
+    <div class="form-group"><label>Saída</label><input type="time" id="pt-sai"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>Almoço início</label><input type="time" id="pt-ai"></div>
+    <div class="form-group"><label>Almoço fim</label><input type="time" id="pt-af"></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn btn-outline" onclick="fechar('m-ponto')">Cancelar</button>
+    <button class="btn btn-primary" onclick="salvarPonto()">Salvar</button>
+  </div>
+</div></div>
 
-## ✅ Vantagens Identificadas
+<script>
+// ── UTILS ──
+const db = {
+  get:(k)=>JSON.parse(localStorage.getItem(k)||'[]'),
+  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),
+  obj:(k)=>JSON.parse(localStorage.getItem(k)||'null'),
+  sObj:(k,v)=>localStorage.setItem(k,JSON.stringify(v))
+};
+const uid=()=>Math.random().toString(36).slice(2,9);
+const brl=v=>'R$ '+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2});
+const fmtDt=d=>{if(!d)return'—';const[y,m,dia]=d.split('-');return`${dia}/${m}/${y}`};
+const hoje=()=>new Date().toISOString().split('T')[0];
 
-Liste pelo menos 3 vantagens percebidas no uso da abordagem low code/no code/vibecode:
+// ── AUTH ──
+let U=null;
+const K={
+  prod:()=>'prod_'+U.id,
+  func:()=>'func_'+U.id,
+  cont:()=>'cont_'+U.id,
+  pont:()=>'pont_'+U.id
+};
 
-1. **Prototipagem rápida** — sistema completo funcional desenvolvido em uma única sessão, sem configuração de servidores ou banco de dados
-2. **Zero dependência externa** — o arquivo roda offline, sem conta em plataforma, sem custo e sem risco de descontinuação do serviço
-3. **Personalização total** — cores, fluxos e regras de negócio completamente controlados, sem as restrições de blocos visuais de plataformas no-code
-4. **Dados privados** — as informações ficam no próprio dispositivo do lojista, sem passar por servidores de terceiros
-5. **Integração nativa entre módulos** — estoque, financeiro, ponto e funcionários compartilham os mesmos dados em tempo real, sem conectores ou automações extras
+function switchTab(t,btn){
+  document.querySelectorAll('.login-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-entrar').style.display=t==='entrar'?'':'none';
+  document.getElementById('tab-cadastrar').style.display=t==='cadastrar'?'':'none';
+}
 
----
+function fazerCadastro(){
+  const loja=v('reg-loja'),nome=v('reg-nome'),email=v('reg-email').toLowerCase(),senha=v('reg-senha');
+  const err=document.getElementById('reg-err');
+  if(!loja||!nome||!email||!senha){err.textContent='Preencha todos os campos.';return}
+  if(senha.length<6){err.textContent='Senha mínima: 6 caracteres.';return}
+  const us=db.get('usuarios');
+  if(us.find(u=>u.email===email)){err.textContent='Email já cadastrado.';return}
+  us.push({id:uid(),loja,nome,email,senha});
+  db.set('usuarios',us);
+  err.style.color='var(--teal)';err.textContent='Conta criada! Faça login.';
+  setTimeout(()=>{err.style.color='var(--danger)';err.textContent=''},2500);
+}
 
-## ⚠️ Limitações Encontradas
+function fazerLogin(){
+  const email=v('login-email').toLowerCase(),senha=v('login-senha');
+  const err=document.getElementById('login-err');
+  const u=db.get('usuarios').find(x=>x.email===email&&x.senha===senha);
+  if(!u){err.textContent='Email ou senha incorretos.';return}
+  U=u;db.sObj('session',u);boot();
+}
 
-Liste pelo menos 3 limitações percebidas:
+function logout(){
+  U=null;localStorage.removeItem('session');
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  set('login-email','');set('login-senha','');
+}
 
-1. **Customização limitada para escala** — sem banco de dados real, os dados não sincronizam entre dispositivos diferentes
-2. **Dependência do navegador** — limpar o cache apaga todos os dados, o que seria inaceitável em produção
-3. **Risco de lock-in tecnológico** — ao evitar plataformas no-code, o grupo assumiu total responsabilidade pelo código; qualquer evolução depende de desenvolvimento manual
-4. **Sem exportação de relatórios** — não é possível gerar PDF ou planilha para o contador
-5. **Sem acesso simultâneo** — funcionários não conseguem registrar ponto de dispositivos diferentes
+function boot(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('topbar-loja').textContent=' · '+U.loja;
+  document.getElementById('topbar-nome').textContent=U.nome.split(' ')[0];
+  document.getElementById('topbar-avatar').textContent=U.nome[0].toUpperCase();
+  const d=new Date();
+  document.getElementById('dash-data').textContent=d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('ponto-label').textContent='Hoje — '+d.toLocaleDateString('pt-BR');
+  document.getElementById('pt-data').value=hoje();
+  renderAll();
+}
 
----
+// ── NAV ──
+function navTo(page,btn){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('page-'+page).classList.add('active');
+}
 
-## 📚 Reflexão Crítica
+function renderAll(){renderDash();renderEstoque();renderFuncionarios();renderPonto();renderFin();renderPrecos();badges()}
 
-O grupo identificou que as limitações mais críticas — sincronização entre dispositivos e ausência de backup — são exatamente os problemas que plataformas como Bubble ou Supabase resolveriam nativamente, mas a custo de dependência e menor controle sobre os dados.
+// ── HELPERS ──
+const v=id=>document.getElementById(id).value.trim();
+const set=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val};
+function abrir(id){document.getElementById(id).classList.add('open')}
+function fechar(id){document.getElementById(id).classList.remove('open')}
+function limpar(ids){ids.forEach(id=>set(id,''))}
 
-A solução criativa adotada foi usar o `localStorage` com dados isolados por usuário, simulando o comportamento de um banco de dados multi-tenant sem infraestrutura real. Isso permitiu que múltiplas contas de loja coexistissem no mesmo arquivo sem interferência entre si.
+function stEst(p){return p.quantidade<=0?'out':p.quantidade<p.minimo?'low':'ok'}
+function bdEst(s){return s==='ok'?'b-ok':s==='low'?'b-low':'b-out'}
+function lbEst(s){return s==='ok'?'OK':s==='low'?'Baixo':'Zerado'}
 
-A experiência confirmou o diagnóstico da Unidade III: vibecode brilha na validação rápida de ideias, mas encontra seu teto natural quando o produto precisa de persistência em nuvem e colaboração em tempo real. O caminho ideal seria usar este protótipo para validar o interesse dos lojistas e, confirmada a demanda, migrar para uma stack com banco de dados real.
+// ── DASHBOARD ──
+function renderDash(){
+  const prods=db.get(K.prod()),contas=db.get(K.cont()),funcs=db.get(K.func());
+  const criticos=prods.filter(p=>stEst(p)!=='ok');
+  const rec=contas.filter(c=>c.tipo==='receita'&&c.status==='pago').reduce((a,c)=>a+Number(c.valor),0);
+  const dep=contas.filter(c=>c.tipo==='despesa'&&c.status==='pago').reduce((a,c)=>a+Number(c.valor),0);
+  const pend=contas.filter(c=>c.status==='pendente');
+  const venc=pend.filter(c=>c.vencimento<hoje());
 
----
+  document.getElementById('dash-kpis').innerHTML=`
+    <div class="kpi"><div class="kpi-icon">📦</div><div class="kpi-label">Produtos</div><div class="kpi-value">${prods.length}</div><div class="kpi-sub">${criticos.length} críticos</div></div>
+    <div class="kpi"><div class="kpi-icon">👥</div><div class="kpi-label">Funcionários</div><div class="kpi-value">${funcs.filter(f=>f.status==='ativo').length}</div><div class="kpi-sub">ativos</div></div>
+    <div class="kpi"><div class="kpi-icon">💚</div><div class="kpi-label">Receitas pagas</div><div class="kpi-value" style="font-size:19px;color:var(--success)">${brl(rec)}</div></div>
+    <div class="kpi"><div class="kpi-icon">🔴</div><div class="kpi-label">Despesas pagas</div><div class="kpi-value" style="font-size:19px;color:var(--danger)">${brl(dep)}</div></div>
+    <div class="kpi"><div class="kpi-icon">💰</div><div class="kpi-label">Saldo</div><div class="kpi-value" style="font-size:19px;color:${rec-dep>=0?'var(--success)':'var(--danger)'}">${brl(rec-dep)}</div></div>`;
 
-## 👥 Colaboração
+  const alertas=[];
+  if(venc.length) alertas.push({t:'danger',m:`${venc.length} conta(s) vencida(s)!`});
+  if(pend.filter(c=>c.vencimento===hoje()).length) alertas.push({t:'warn',m:`Contas vencem hoje.`});
+  if(criticos.filter(p=>stEst(p)==='out').length) alertas.push({t:'danger',m:`Produto(s) sem estoque.`});
+  if(criticos.filter(p=>stEst(p)==='low').length) alertas.push({t:'warn',m:`Produto(s) com estoque baixo.`});
 
-| Integrante | Responsabilidade |
-|---|---|
-| **Richard de Souza Dias** | Desenvolvimento do protótipo — código HTML/CSS/JS, criação dos módulos de estoque, ponto, financeiro e funcionários |
-| **Matheo Augustus Rocha Bagatini** | Design e experiência do usuário — paleta de cores, layout da interface, fluxo de navegação e usabilidade |
-| **João Miguel Monteiro Lima** | Análise crítica e documentação — mapeamento de vantagens e limitações, reflexão crítica e README |
-| **João Pedro Mota Borges Baía** | Testes e apresentação — validação de todas as funcionalidades, prints das telas e preparação da apresentação |
+  document.getElementById('dash-alertas').innerHTML=alertas.length
+    ?alertas.map(a=>`<div class="alert-item ${a.t}">${a.t==='danger'?'🔴':'⚠️'} ${a.m}</div>`).join('')
+    :'<p style="color:var(--slate);font-size:13px">✅ Tudo em ordem.</p>';
 
----
+  document.getElementById('dash-critico').innerHTML=criticos.length
+    ?criticos.slice(0,5).map(p=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${p.nome}</span><span class="badge ${bdEst(stEst(p))}">${lbEst(stEst(p))}</span></div>`).join('')
+    :'<p style="color:var(--slate);font-size:13px">✅ Estoque saudável.</p>';
+}
 
-## 📝 Registro da Aula
+// ── ESTOQUE ──
+function renderEstoque(busca){
+  busca=busca||'';
+  const fil=document.getElementById('filtro-est')?.value||'';
+  let list=db.get(K.prod());
+  if(busca) list=list.filter(p=>p.nome.toLowerCase().includes(busca.toLowerCase())||p.categoria.toLowerCase().includes(busca.toLowerCase()));
+  if(fil) list=list.filter(p=>stEst(p)===fil);
+  const tb=document.getElementById('tb-est');
+  tb.innerHTML=list.length?list.map(p=>`<tr>
+    <td><strong>${p.nome}</strong></td><td style="color:var(--slate)">${p.categoria}</td>
+    <td>${p.quantidade}</td><td>${p.minimo}</td><td>${brl(p.preco)}</td>
+    <td><span class="badge ${bdEst(stEst(p))}">${lbEst(stEst(p))}</span></td>
+    <td><div style="display:flex;gap:4px">
+      <button class="btn btn-outline btn-sm btn-icon" onclick="editProd('${p.id}')">✏️</button>
+      <button class="btn btn-outline btn-sm btn-icon" onclick="delProd('${p.id}')">🗑️</button>
+    </div></td></tr>`).join('')
+    :`<tr><td colspan="7" class="no-data">📦 Nenhum produto encontrado.</td></tr>`;
+}
 
-| Campo | Informação |
-|---|---|
-| **Data** | 11/05/2026 |
-| **Atividade** | Discussão crítica + mini-projeto de aplicação |
-| **Local** | Laboratório de informática / Quadro branco |
-| **Professor(a)** | Kadidja Valéria |
+function abrirProduto(){limpar(['p-id','p-nome','p-cat','p-qtd','p-min','p-preco','p-custo']);document.getElementById('t-produto').textContent='Novo Produto';abrir('m-produto')}
+function editProd(id){
+  const p=db.get(K.prod()).find(x=>x.id===id);if(!p)return;
+  document.getElementById('t-produto').textContent='Editar Produto';
+  set('p-id',p.id);set('p-nome',p.nome);set('p-cat',p.categoria);set('p-qtd',p.quantidade);set('p-min',p.minimo);set('p-preco',p.preco);set('p-custo',p.custo||'');
+  abrir('m-produto');
+}
+function salvarProduto(){
+  const id=v('p-id'),nome=v('p-nome'),cat=v('p-cat'),qtd=Number(v('p-qtd')),min=Number(v('p-min')),preco=Number(v('p-preco')),custo=Number(v('p-custo'))||0;
+  if(!nome||!cat||isNaN(qtd)||isNaN(min)||!preco){alert('Preencha os campos obrigatórios.');return}
+  let list=db.get(K.prod());
+  if(id) list=list.map(p=>p.id===id?{...p,nome,categoria:cat,quantidade:qtd,minimo:min,preco,custo,atualizado:hoje()}:p);
+  else list.push({id:uid(),nome,categoria:cat,quantidade:qtd,minimo:min,preco,custo,atualizado:hoje()});
+  db.set(K.prod(),list);fechar('m-produto');renderAll();
+}
+function delProd(id){if(!confirm('Excluir produto?'))return;db.set(K.prod(),db.get(K.prod()).filter(p=>p.id!==id));renderAll()}
 
----
+// ── FUNCIONÁRIOS ──
+function renderFuncionarios(busca){
+  busca=busca||'';
+  let list=db.get(K.func());
+  if(busca) list=list.filter(f=>f.nome.toLowerCase().includes(busca.toLowerCase())||f.cargo.toLowerCase().includes(busca.toLowerCase()));
+  const sm={ativo:'b-ativo',ferias:'b-ferias',inativo:'b-inativo'};
+  const sl={ativo:'Ativo',ferias:'Férias',inativo:'Inativo'};
+  const tb=document.getElementById('tb-func');
+  tb.innerHTML=list.length?list.map(f=>`<tr>
+    <td><strong>${f.nome}</strong></td><td>${f.cargo}</td>
+    <td>${f.entrada||'—'}</td><td>${f.ai||'—'}–${f.af||'—'}</td><td>${f.saida||'—'}</td>
+    <td>${brl(f.salario)}</td>
+    <td><span class="badge ${sm[f.status]||'b-inativo'}">${sl[f.status]||f.status}</span></td>
+    <td><div style="display:flex;gap:4px">
+      <button class="btn btn-outline btn-sm btn-icon" onclick="editFunc('${f.id}')">✏️</button>
+      <button class="btn btn-outline btn-sm btn-icon" onclick="delFunc('${f.id}')">🗑️</button>
+    </div></td></tr>`).join('')
+    :`<tr><td colspan="8" class="no-data">👥 Nenhum funcionário cadastrado.</td></tr>`;
+}
 
-## 🚀 Próximos Passos
+function abrirFunc(){
+  limpar(['f-id','f-nome','f-cargo','f-sal']);
+  set('f-entrada','08:00');set('f-saida','17:00');set('f-ai','12:00');set('f-af','13:00');set('f-status','ativo');
+  document.getElementById('t-func').textContent='Novo Funcionário';abrir('m-func');
+}
+function editFunc(id){
+  const f=db.get(K.func()).find(x=>x.id===id);if(!f)return;
+  document.getElementById('t-func').textContent='Editar Funcionário';
+  set('f-id',f.id);set('f-nome',f.nome);set('f-cargo',f.cargo);set('f-entrada',f.entrada||'08:00');set('f-saida',f.saida||'17:00');set('f-ai',f.ai||'12:00');set('f-af',f.af||'13:00');set('f-sal',f.salario||'');set('f-status',f.status||'ativo');
+  abrir('m-func');
+}
+function salvarFunc(){
+  const id=v('f-id'),nome=v('f-nome'),cargo=v('f-cargo');
+  if(!nome||!cargo){alert('Preencha nome e cargo.');return}
+  const dados={nome,cargo,entrada:v('f-entrada'),saida:v('f-saida'),ai:v('f-ai'),af:v('f-af'),salario:Number(v('f-sal'))||0,status:v('f-status')};
+  let list=db.get(K.func());
+  if(id) list=list.map(f=>f.id===id?{...f,...dados}:f);
+  else list.push({id:uid(),...dados});
+  db.set(K.func(),list);fechar('m-func');renderFuncionarios();renderPonto();renderDash();
+}
+function delFunc(id){if(!confirm('Excluir funcionário?'))return;db.set(K.func(),db.get(K.func()).filter(f=>f.id!==id));renderFuncionarios();renderPonto();renderDash()}
 
-* Adicionar exportação de dados em JSON para backup manual entre dispositivos
-* Implementar geração de relatório PDF de ponto mensal por funcionário
-* Migrar o armazenamento de `localStorage` para Supabase, mantendo a mesma interface visual
-* Adicionar módulo de metas de vendas com acompanhamento diário
-* Criar versão mobile-first para que funcionários registrem o ponto pelo celular
-* Evoluir para o Projeto Final da Unidade 3 com autenticação real e dados em nuvem
+// ── PONTO ──
+function renderPonto(){
+  const funcs=db.get(K.func()).filter(f=>f.status==='ativo');
+  const pontos=db.get(K.pont());
+  const dh=hoje();
+  const lista=document.getElementById('lista-ponto');
+  if(!funcs.length){lista.innerHTML='<p style="color:var(--slate);font-size:13px;padding:1rem">Nenhum funcionário ativo.</p>';return}
+  lista.innerHTML=funcs.map(f=>{
+    const pt=pontos.find(p=>p.fid===f.id&&p.data===dh);
+    const hrs=pt&&pt.entrada&&pt.saida?calcHrs(pt):'';
+    return`<div class="ponto-card">
+      <div style="flex:1">
+        <div style="font-weight:500;font-size:14px">${f.nome} <span style="color:var(--slate);font-size:12px;font-weight:400">· ${f.cargo}</span></div>
+        <div style="font-size:12px;color:var(--slate);margin-top:3px">${pt
+          ?`Entrada: <b>${pt.entrada||'—'}</b> · Almoço: <b>${pt.ai||'—'}–${pt.af||'—'}</b> · Saída: <b>${pt.saida||'—'}</b>${hrs?' · <b>'+hrs+'</b>':''}`
+          :`Jornada: ${f.entrada}–${f.saida} (almoço ${f.ai}–${f.af})`
+        }</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        ${pt
+          ?`<button class="btn btn-outline btn-sm" onclick="editPonto('${f.id}','${f.nome}')">✏️ Editar</button>`
+          :`<button class="btn btn-primary btn-sm" onclick="abrirPonto('${f.id}','${f.nome}')">+ Registrar</button>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function calcHrs(pt){
+  const tm=t=>{const[h,m]=t.split(':').map(Number);return h*60+m};
+  let tot=tm(pt.saida)-tm(pt.entrada);
+  if(pt.ai&&pt.af) tot-=(tm(pt.af)-tm(pt.ai));
+  if(tot<=0)return'';
+  const h=Math.floor(tot/60),m=tot%60;
+  return h+'h'+(m>0?m+'min':'');
+}
+
+function abrirPonto(fid,nome){
+  document.getElementById('t-ponto').textContent='Ponto — '+nome;
+  set('pt-fid',fid);set('pt-data',hoje());
+  const f=db.get(K.func()).find(x=>x.id===fid);
+  if(f){set('pt-ent',f.entrada||'');set('pt-sai',f.saida||'');set('pt-ai',f.ai||'');set('pt-af',f.af||'')}
+  abrir('m-ponto');
+}
+function editPonto(fid,nome){
+  const pt=db.get(K.pont()).find(p=>p.fid===fid&&p.data===hoje());
+  if(!pt)return;
+  document.getElementById('t-ponto').textContent='Editar Ponto — '+nome;
+  set('pt-fid',fid);set('pt-data',pt.data);set('pt-ent',pt.entrada||'');set('pt-sai',pt.saida||'');set('pt-ai',pt.ai||'');set('pt-af',pt.af||'');
+  abrir('m-ponto');
+}
+function salvarPonto(){
+  const fid=v('pt-fid'),data=v('pt-data');
+  let list=db.get(K.pont());
+  const idx=list.findIndex(p=>p.fid===fid&&p.data===data);
+  const reg={fid,data,entrada:v('pt-ent'),saida:v('pt-sai'),ai:v('pt-ai'),af:v('pt-af')};
+  if(idx>=0) list[idx]=reg; else list.push(reg);
+  db.set(K.pont(),list);fechar('m-ponto');renderPonto();
+}
+
+// ── FINANCEIRO ──
+function renderFin(){
+  const list=db.get(K.cont());
+  const rec=list.filter(c=>c.tipo==='receita'&&c.status==='pago').reduce((a,c)=>a+Number(c.valor),0);
+  const dep=list.filter(c=>c.tipo==='despesa'&&c.status==='pago').reduce((a,c)=>a+Number(c.valor),0);
+  const pend=list.filter(c=>c.status==='pendente').reduce((a,c)=>a+Number(c.valor),0);
+  const venc=list.filter(c=>c.status==='pendente'&&c.vencimento<hoje()).length;
+
+  document.getElementById('fin-kpis').innerHTML=`
+    <div class="kpi"><div class="kpi-label">Receitas pagas</div><div class="kpi-value" style="font-size:19px;color:var(--success)">${brl(rec)}</div></div>
+    <div class="kpi"><div class="kpi-label">Despesas pagas</div><div class="kpi-value" style="font-size:19px;color:var(--danger)">${brl(dep)}</div></div>
+    <div class="kpi"><div class="kpi-label">Saldo</div><div class="kpi-value" style="font-size:19px;color:${rec-dep>=0?'var(--success)':'var(--danger)'}">${brl(rec-dep)}</div></div>
+    <div class="kpi"><div class="kpi-label">Pendente</div><div class="kpi-value" style="font-size:19px">${brl(pend)}</div><div class="kpi-sub" style="color:var(--danger)">${venc} vencida(s)</div></div>`;
+
+  const tb=document.getElementById('tb-fin');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="7" class="no-data">💰 Nenhuma conta cadastrada.</td></tr>`;return}
+  const sorted=[...list].sort((a,b)=>a.vencimento.localeCompare(b.vencimento));
+  tb.innerHTML=sorted.map(c=>{
+    const vencida=c.status==='pendente'&&c.vencimento<hoje();
+    const bc=c.status==='pago'?'b-pago':vencida?'b-vencido':'b-pendente';
+    const lb=c.status==='pago'?'Pago':vencida?'Vencido':'Pendente';
+    return`<tr>
+      <td><strong>${c.descricao}</strong></td><td style="color:var(--slate)">${c.categoria||'—'}</td>
+      <td style="font-weight:500;color:${c.tipo==='receita'?'var(--success)':'var(--danger)'}">${brl(c.valor)}</td>
+      <td>${fmtDt(c.vencimento)}</td>
+      <td style="font-size:12px;color:var(--slate)">${c.tipo==='receita'?'↑ Receita':'↓ Despesa'}</td>
+      <td><span class="badge ${bc}">${lb}</span></td>
+      <td><div style="display:flex;gap:4px">
+        ${c.status==='pendente'?`<button class="btn btn-outline btn-sm" onclick="pagar('${c.id}')">✅ Pago</button>`:''}
+        <button class="btn btn-outline btn-sm btn-icon" onclick="editConta('${c.id}')">✏️</button>
+        <button class="btn btn-outline btn-sm btn-icon" onclick="delConta('${c.id}')">🗑️</button>
+      </div></td></tr>`;
+  }).join('');
+}
+
+function abrirConta(){limpar(['c-id','c-desc','c-val','c-cat']);set('c-venc',hoje());set('c-tipo','despesa');set('c-status','pendente');document.getElementById('t-conta').textContent='Nova Conta';abrir('m-conta')}
+function editConta(id){
+  const c=db.get(K.cont()).find(x=>x.id===id);if(!c)return;
+  document.getElementById('t-conta').textContent='Editar Conta';
+  set('c-id',c.id);set('c-desc',c.descricao);set('c-val',c.valor);set('c-venc',c.vencimento);set('c-cat',c.categoria||'');set('c-tipo',c.tipo);set('c-status',c.status);
+  abrir('m-conta');
+}
+function salvarConta(){
+  const id=v('c-id'),desc=v('c-desc'),val=Number(v('c-val')),venc=v('c-venc');
+  if(!desc||!val||!venc){alert('Preencha os campos obrigatórios.');return}
+  const dados={descricao:desc,valor:val,vencimento:venc,categoria:v('c-cat'),tipo:v('c-tipo'),status:v('c-status')};
+  let list=db.get(K.cont());
+  if(id) list=list.map(c=>c.id===id?{...c,...dados}:c);
+  else list.push({id:uid(),...dados});
+  db.set(K.cont(),list);fechar('m-conta');renderFin();renderDash();badges();
+}
+function pagar(id){let l=db.get(K.cont());l=l.map(c=>c.id===id?{...c,status:'pago'}:c);db.set(K.cont(),l);renderFin();renderDash();badges()}
+function delConta(id){if(!confirm('Excluir conta?'))return;db.set(K.cont(),db.get(K.cont()).filter(c=>c.id!==id));renderFin();renderDash();badges()}
+
+// ── PREÇOS ──
+function renderPrecos(){
+  const list=db.get(K.prod());
+  const tb=document.getElementById('tb-preco');
+  tb.innerHTML=list.length?list.map(p=>{
+    const m=p.custo>0?Math.round((1-p.custo/p.preco)*100)+'%':'—';
+    return`<tr>
+      <td><strong>${p.nome}</strong></td><td style="color:var(--slate)">${p.categoria}</td>
+      <td style="font-weight:600;color:var(--teal)">${brl(p.preco)}</td>
+      <td>${p.custo?brl(p.custo):'—'}</td>
+      <td>${p.custo>0?`<span style="color:${parseInt(m)>30?'var(--success)':'var(--warn)'}">${m}</span>`:'—'}</td>
+      <td style="color:var(--slate);font-size:12px">${fmtDt(p.atualizado)}</td></tr>`;
+  }).join('')
+  :`<tr><td colspan="6" class="no-data">🏷️ Cadastre produtos para ver os preços.</td></tr>`;
+}
+
+// ── BADGES ──
+function badges(){
+  const c=db.get(K.prod()).filter(p=>stEst(p)!=='ok').length;
+  const be=document.getElementById('badge-est');be.textContent=c;be.style.display=c>0?'inline':'none';
+  const v2=db.get(K.cont()).filter(c=>c.status==='pendente'&&c.vencimento<=hoje()).length;
+  const bf=document.getElementById('badge-fin');bf.textContent=v2;bf.style.display=v2>0?'inline':'none';
+}
+
+// ── FECHAR MODAL CLICANDO FORA ──
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+
+// ── BOOT ──
+const sess=db.obj('session');
+if(sess){U=sess;boot()}
+</script>
+</body>
+</html>
