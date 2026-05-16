@@ -74,8 +74,8 @@ A experiência confirmou o diagnóstico da Unidade III: vibecode brilha na valid
 
 | Integrante | Responsabilidade |
 |---|---|
-| **Richard de Souza Dias** | Desenvolvimento do protótipo — código HTML/CSS/JS, criação dos módulos de estoque, ponto, financeiro e funcionários |
-| **Matheo Augustus Rocha Bagatini** | Design e experiência do usuário — paleta de cores, layout da interface, fluxo de navegação e usabilidade |
+| **Matheo Augustus Rocha Bagatini** | Desenvolvimento do protótipo — código HTML/CSS/JS, criação dos módulos de estoque, ponto, financeiro e funcionários |
+| **Richard de Souza Dias** | Design e experiência do usuário — paleta de cores, layout da interface, fluxo de navegação e usabilidade |
 | **João Miguel Monteiro Lima** | Análise crítica e documentação — mapeamento de vantagens e limitações, reflexão crítica e README |
 | **João Pedro Mota Borges Baía** | Testes e apresentação — validação de todas as funcionalidades, prints das telas e preparação da apresentação |
 
@@ -85,7 +85,7 @@ A experiência confirmou o diagnóstico da Unidade III: vibecode brilha na valid
 
 | Campo | Informação |
 |---|---|
-| **Data** | 11/05/2026 |
+| **Data** | 15/05/2026 |
 | **Atividade** | Discussão crítica + mini-projeto de aplicação |
 | **Local** | Laboratório de informática / Quadro branco |
 | **Professor(a)** | Kadidja Valéria |
