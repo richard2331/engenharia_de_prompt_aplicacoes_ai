@@ -72,10 +72,12 @@ A experiência confirmou o diagnóstico da Unidade III: vibecode brilha na valid
 
 ## 👥 Colaboração
 
-- Richard de Souza Dias
-- Matheo Augustus Rocha Bagatini
-- João Miguel Monteiro Lima
-- João Pedro Mota Borges Baía
+| Integrante | Responsabilidade |
+|---|---|
+| **Richard de Souza Dias** | Desenvolvimento do protótipo — código HTML/CSS/JS, criação dos módulos de estoque, ponto, financeiro e funcionários |
+| **Matheo Augustus Rocha Bagatini** | Design e experiência do usuário — paleta de cores, layout da interface, fluxo de navegação e usabilidade |
+| **João Miguel Monteiro Lima** | Análise crítica e documentação — mapeamento de vantagens e limitações, reflexão crítica e README |
+| **João Pedro Mota Borges Baía** | Testes e apresentação — validação de todas as funcionalidades, prints das telas e preparação da apresentação |
 
 ---
 
